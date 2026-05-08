@@ -20,7 +20,8 @@ from dependencies import (
 )
 router = APIRouter(
     prefix="/tasks",
-    tags=["Tasks"]
+    tags=["Tasks"],
+    dependencies=[Depends(get_current_user)]
 )
 
 
@@ -44,7 +45,8 @@ def get_tasks(
 @router.post("/")
 def create_task(
     task: TaskCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(admin_only)
 ):
 
     new_task = Task(**task.dict())
@@ -82,11 +84,11 @@ def update_task(
         "message": "Task updated successfully"
     }
 
-
 @router.delete("/{task_id}")
 def delete_task(
     task_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(admin_only)
 ):
 
     db_task = db.query(Task).filter(
