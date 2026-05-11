@@ -57,7 +57,8 @@ def register(
 
     new_user = User(
         username=user.username,
-        hashed_password=hash_password(user.password)
+        hashed_password=hash_password(user.password),
+        role="admin"
     )
 
     db.add(new_user)
